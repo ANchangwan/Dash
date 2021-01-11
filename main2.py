@@ -29,7 +29,8 @@ app.layout = html.Div([
         clearable= False
     ),
     dcc.Graph(id="display_time_chart"),
-    dcc.Graph(id="display_time_chart2")
+    dcc.Graph(id="display_time_chart2"),
+    dcc.Graph(id="display_time_chart3")
 ])
 
 
@@ -37,6 +38,8 @@ app.layout = html.Div([
     Output("display_time_chart", "figure"), 
     [Input("ticker","value")])
 def display_time_series(value):
+    df["구분"].dropna()
+    df["매출액"].dropna()
     flg = px.pie(data_frame=df, names = '구분',values ="매출액",title = "사이트별 매출액")
     return flg
 
@@ -44,9 +47,20 @@ def display_time_series(value):
     Output("display_time_chart2", "figure"), 
     [Input("ticker","value")])
 def display_month(value):
-    flg = px.bar(data_frame=df2,x="월",y="월별매출액",color="월",title = "월별매출액")
-    return flg
     
+    flg = px.line(data_frame=df2.dropna(),x=df2["월"].dropna(),y=df2["월별매출액"].dropna(),
+    labels =dict(x= "월" , y = "월별매출액",color = "월별매출액"),
+    title = "월별매출액")
+
+    flg.add_bar(x=df2["월"],y=df2["월별매출액"],name="월")
+
+    flg.add_trace(go.Scatter(x=df2["월"],y = df2["월별매출액"],
+    mode="lines+markers",
+    name = "매출액"))
+    return flg
+
+
+        
    
 
 app.run_server(debug=True)
