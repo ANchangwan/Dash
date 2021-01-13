@@ -29,8 +29,7 @@ app.layout = html.Div([
         clearable= False
     ),
     dcc.Graph(id="display_time_chart"),
-    dcc.Graph(id="display_time_chart2"),
-    dcc.Graph(id="display_time_chart3")
+    dcc.Graph(id="display_time_chart2")
 ])
 
 
@@ -47,7 +46,7 @@ def display_time_series(value):
     Output("display_time_chart2", "figure"), 
     [Input("ticker","value")])
 def display_month(value):
-    
+
     flg = px.line(data_frame=df2.dropna(),x=df2["월"].dropna(),y=df2["월별매출액"].dropna(),
     labels =dict(x= "월" , y = "월별매출액",color = "월별매출액"),
     title = "월별매출액")
